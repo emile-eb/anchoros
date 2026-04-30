@@ -17,7 +17,7 @@ type ProposalListItem = Pick<
   } | null;
 };
 
-type WorkspaceMemberListItem = Pick<
+export type WorkspaceMemberListItem = Pick<
   Database["public"]["Tables"]["workspace_members"]["Row"],
   "id" | "role" | "created_at"
 > & {
@@ -103,6 +103,16 @@ export const getWorkspaceContext = cache(async () => {
 
   return { user, profile, workspace: membership.workspace, membership, isPreview: false };
 });
+
+export async function requireWorkspaceOwner() {
+  const context = await getWorkspaceContext();
+
+  if (context.membership.role !== "owner") {
+    throw new Error("Only workspace owners can perform this action.");
+  }
+
+  return context;
+}
 
 export async function getDiscoverySummary() {
   const { workspace } = await getWorkspaceContext();

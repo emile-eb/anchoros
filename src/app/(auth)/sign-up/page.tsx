@@ -6,8 +6,8 @@ export default function SignUpPage() {
   return (
     <AuthShell
       eyebrow="Create account"
-      title="Provision access to the seeded Anchor Studios workspace."
-      description="Phase 1 is optimized for the two cofounders. Each approved signup lands inside the shared company workspace with the same navigation and data foundation."
+      title="Create the account that your invite will attach to."
+      description="Workspace access is now invitation-based. Use the same email address that received the invite, then finish acceptance inside the product."
     >
       <div className="w-full max-w-md">
         <Suspense fallback={null}>

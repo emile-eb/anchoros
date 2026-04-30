@@ -7,7 +7,7 @@ export default function LoginPage() {
     <AuthShell
       eyebrow="Sign in"
       title="A calmer operating system for the sales process."
-      description="Anchor Studios OS keeps the first phase intentionally tight: clean auth, shared workspace access, and a fast base for the next product layers."
+      description="Sign in with the email that has access to your workspace. Anchor Studios OS keeps auth, workspace access, and field execution tightly connected."
     >
       <div className="w-full max-w-md">
         <Suspense fallback={null}>

@@ -633,6 +633,54 @@ export type Database = {
         };
         Relationships: [];
       };
+      workspace_invites: {
+        Row: {
+          accepted_at: string | null;
+          accepted_by: string | null;
+          created_at: string;
+          email: string;
+          expires_at: string;
+          id: string;
+          invited_by: string | null;
+          revoked_at: string | null;
+          role: Database["public"]["Enums"]["workspace_role"];
+          status: Database["public"]["Enums"]["workspace_invite_status"];
+          token_hash: string;
+          updated_at: string;
+          workspace_id: string;
+        };
+        Insert: {
+          accepted_at?: string | null;
+          accepted_by?: string | null;
+          created_at?: string;
+          email: string;
+          expires_at?: string;
+          id?: string;
+          invited_by?: string | null;
+          revoked_at?: string | null;
+          role?: Database["public"]["Enums"]["workspace_role"];
+          status?: Database["public"]["Enums"]["workspace_invite_status"];
+          token_hash: string;
+          updated_at?: string;
+          workspace_id: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          accepted_by?: string | null;
+          created_at?: string;
+          email?: string;
+          expires_at?: string;
+          id?: string;
+          invited_by?: string | null;
+          revoked_at?: string | null;
+          role?: Database["public"]["Enums"]["workspace_role"];
+          status?: Database["public"]["Enums"]["workspace_invite_status"];
+          token_hash?: string;
+          updated_at?: string;
+          workspace_id?: string;
+        };
+        Relationships: [];
+      };
       workspaces: {
         Row: {
           created_at: string;
@@ -723,6 +771,7 @@ export type Database = {
         | "decent_website"
         | "strong_website"
         | "unknown";
+      workspace_invite_status: "pending" | "accepted" | "revoked" | "expired";
       workspace_role: "owner" | "member";
     };
     CompositeTypes: Record<string, never>;

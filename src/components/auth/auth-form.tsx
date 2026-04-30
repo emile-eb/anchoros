@@ -23,6 +23,21 @@ const authSchema = z.object({
 
 type AuthFormValues = z.infer<typeof authSchema>;
 
+function isAllowedNextPath(value: string | null): value is Route {
+  if (
+    value === "/dashboard" ||
+    value === "/leads" ||
+    value === "/discovery" ||
+    value === "/routes" ||
+    value === "/proposals" ||
+    value === "/settings"
+  ) {
+    return true;
+  }
+
+  return Boolean(value && /^\/invite\/[a-f0-9]{40,64}$/i.test(value));
+}
+
 export function AuthForm({ mode }: { mode: "login" | "sign-up" }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -30,15 +45,12 @@ export function AuthForm({ mode }: { mode: "login" | "sign-up" }) {
   const supabaseEnabled = hasSupabaseEnv();
   const supabase = supabaseEnabled ? createClient() : null;
   const requestedPath = searchParams.get("next");
-  const nextPath: Route =
-    requestedPath === "/dashboard" ||
-    requestedPath === "/leads" ||
-    requestedPath === "/discovery" ||
-    requestedPath === "/routes" ||
-    requestedPath === "/proposals" ||
-    requestedPath === "/settings"
-      ? requestedPath
-      : "/dashboard";
+  const nextPath: Route = isAllowedNextPath(requestedPath) ? requestedPath : "/dashboard";
+  const alternateAuthHref = requestedPath
+    ? `${mode === "login" ? "/sign-up" : "/login"}?next=${encodeURIComponent(requestedPath)}`
+    : mode === "login"
+      ? "/sign-up"
+      : "/login";
 
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
@@ -72,9 +84,35 @@ export function AuthForm({ mode }: { mode: "login" | "sign-up" }) {
       }
 
       if (mode === "sign-up" && !data.session) {
-        toast.success("Account created. Confirm the email in Supabase, then sign in.");
-        router.push("/login");
+        toast.error(
+          "Email confirmation is still enabled in Supabase Auth. Disable it so users can enter immediately after sign-up.",
+        );
         return;
+      }
+
+      if (!data.user) {
+        toast.error("Signed-in user could not be resolved.");
+        return;
+      }
+
+      if (!nextPath.startsWith("/invite/")) {
+        const { data: memberships, error: membershipError } = await supabase
+          .from("workspace_members")
+          .select("id")
+          .eq("user_id", data.user.id)
+          .limit(1);
+
+        if (membershipError) {
+          toast.error(membershipError.message);
+          return;
+        }
+
+        if (!memberships || memberships.length === 0) {
+          toast.success(mode === "login" ? "Signed in." : "Account created.");
+          router.replace("/no-workspace" as Route);
+          router.refresh();
+          return;
+        }
       }
 
       toast.success(mode === "login" ? "Signed in." : "Account created.");
@@ -92,7 +130,7 @@ export function AuthForm({ mode }: { mode: "login" | "sign-up" }) {
         <CardDescription>
           {mode === "login"
             ? "Use your workspace credentials to access the sales OS."
-            : "New users are automatically added to the seeded Anchor Studios workspace."}
+            : "Create the account and go directly into the product without email confirmation."}
         </CardDescription>
       </CardHeader>
       <CardContent className="px-6 pb-6">
@@ -119,7 +157,7 @@ export function AuthForm({ mode }: { mode: "login" | "sign-up" }) {
         </form>
         <div className="mt-5 border-t border-[#eceff3] pt-4 text-sm text-neutral-500">
           {mode === "login" ? "Need access?" : "Already have an account?"}{" "}
-          <Link className="font-medium text-neutral-950 underline underline-offset-4" href={mode === "login" ? "/sign-up" : "/login"}>
+          <Link className="font-medium text-neutral-950 underline underline-offset-4" href={alternateAuthHref as Route}>
             {mode === "login" ? "Create an account" : "Sign in"}
           </Link>
         </div>

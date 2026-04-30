@@ -1,20 +1,22 @@
-import { Building2, ShieldCheck, Users } from "lucide-react";
+import { Building2, ShieldCheck } from "lucide-react";
 import { PageIntro } from "@/components/app/page-intro";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSettingsSummary } from "@/lib/data/workspace";
+import { getWorkspaceInvites } from "@/lib/data/workspace-invites";
+import { SettingsWorkspaceAdmin } from "@/components/settings/settings-workspace-admin";
 
 export default async function SettingsPage() {
   const { workspace, profile, membership, members } = await getSettingsSummary();
+  const invites = membership.role === "owner" ? await getWorkspaceInvites() : [];
 
   return (
     <div className="space-y-8">
-      <PageIntro eyebrow={workspace.name} title="Settings" description="Workspace access and member roles are intentionally simple in Phase 1. Everyone signs into the shared company workspace seeded in the migration." />
-      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+      <PageIntro eyebrow={workspace.name} title="Settings" description="Workspace access is now invite-driven. Owners control who gets in, what role they hold, and which invites are still pending." />
+      <div className="grid gap-6 xl:grid-cols-[0.86fr_1.14fr]">
         <Card>
           <CardHeader>
             <CardTitle>Workspace</CardTitle>
-            <CardDescription>Core account and membership context for this phase.</CardDescription>
+            <CardDescription>Current workspace context for this account.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="flex items-start gap-3 rounded-2xl border border-neutral-200 p-4">
@@ -33,28 +35,13 @@ export default async function SettingsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Members</CardTitle>
-            <CardDescription>Current members attached to the seeded Anchor Studios workspace.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {members.map((member) => (
-              <div key={member.id} className="flex flex-col gap-3 rounded-2xl border border-neutral-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-start gap-3">
-                  <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-2 text-neutral-700">
-                    <Users className="size-4" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-950">{member.profiles?.full_name ?? member.profiles?.email}</p>
-                    <p className="text-sm text-neutral-500">{member.profiles?.email}</p>
-                  </div>
-                </div>
-                <Badge variant={member.role === "owner" ? "success" : "default"}>{member.role}</Badge>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <SettingsWorkspaceAdmin
+          workspaceName={workspace.name}
+          currentUserId={profile.id}
+          currentRole={membership.role}
+          members={members}
+          invites={invites}
+        />
       </div>
     </div>
   );

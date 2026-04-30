@@ -37,7 +37,8 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/discovery") ||
     pathname.startsWith("/routes") ||
     pathname.startsWith("/proposals") ||
-    pathname.startsWith("/settings");
+    pathname.startsWith("/settings") ||
+    pathname.startsWith("/no-workspace");
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
