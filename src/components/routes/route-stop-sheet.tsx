@@ -27,7 +27,7 @@ export function RouteStopSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto p-0 inset-x-0 bottom-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-t-xl rounded-b-none border-x-0 border-b-0 md:inset-auto md:max-w-xl md:translate-x-[-50%] md:translate-y-[-50%] md:rounded-lg md:border">
+      <DialogContent className="inset-x-0 bottom-0 top-auto max-h-[90vh] w-full max-w-none translate-x-0 translate-y-0 overflow-y-auto rounded-b-none rounded-t-xl border-x-0 border-b-0 p-0 md:bottom-auto md:left-[50%] md:right-auto md:top-[50%] md:max-w-xl md:translate-x-[-50%] md:translate-y-[-50%] md:rounded-lg md:border">
         <div className="border-b border-[#eceff3] px-4 py-4 md:px-6 md:py-5">
           <DialogTitle>{stop.restaurant_name ?? "Route stop"}</DialogTitle>
           <DialogDescription className="mt-1">

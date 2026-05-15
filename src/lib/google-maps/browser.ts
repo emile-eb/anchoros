@@ -48,8 +48,14 @@ export async function loadGoogleMapsBrowserApi() {
 
   if (!googleMapsPromise) {
     googleMapsPromise = new Promise((resolve, reject) => {
+      const params = new URLSearchParams({
+        key: browserKey,
+        v: "weekly",
+        libraries: "marker",
+        loading: "async",
+      });
       const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${browserKey}&v=weekly&libraries=marker`;
+      script.src = `https://maps.googleapis.com/maps/api/js?${params.toString()}`;
       script.async = true;
       script.defer = true;
       script.onload = () => {

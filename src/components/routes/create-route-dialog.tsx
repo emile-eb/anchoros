@@ -147,7 +147,7 @@ export function CreateRouteDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-5xl overflow-y-auto p-0 md:rounded-lg rounded-t-xl rounded-b-none md:inset-auto inset-x-0 bottom-0 top-auto md:translate-x-[-50%] md:translate-y-[-50%] translate-x-0 translate-y-0">
+      <DialogContent className="inset-x-0 bottom-0 top-auto max-h-[90vh] max-w-5xl translate-x-0 translate-y-0 overflow-y-auto rounded-b-none rounded-t-xl p-0 md:bottom-auto md:left-[50%] md:right-auto md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:rounded-lg">
         <div className="sticky top-0 z-10 border-b border-[#eceff3] bg-white px-4 py-4 md:px-6 md:py-5">
           <DialogTitle>{preview ? "Review route" : "Create smart route"}</DialogTitle>
           <DialogDescription className="mt-1 text-[12px] leading-5 md:text-sm md:leading-6">
